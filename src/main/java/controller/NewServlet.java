@@ -1,5 +1,6 @@
 package controller;
 
+import Hashing.HashPassword;
 import Model.Student;
 import Service.UserService;
 import java.io.IOException;
@@ -28,8 +29,7 @@ public class NewServlet extends HttpServlet {
            
             st.setFullname(request.getParameter("fullname"));
             st.setUsername(request.getParameter("username"));
-            st.setPassword(request.getParameter("password"));
-            
+            st.setPassword( HashPassword.hashThisPass(request.getParameter("password")));
             new UserService().insertUser(st);
             out.print("Data inserted");
         } else if(page.equalsIgnoreCase("register")){
@@ -42,7 +42,8 @@ public class NewServlet extends HttpServlet {
         
         if(page.equalsIgnoreCase("insert")){
             String name = request.getParameter("username");
-            String password = request.getParameter("password");    
+//            String password = request.getParameter("password");    
+            String password = HashPassword.hashThisPass(request.getParameter("password"));
             Student st = new UserService().getUser(name, password);
             if(st != null){
                 HttpSession sess = request.getSession();
@@ -120,6 +121,13 @@ public class NewServlet extends HttpServlet {
             request.setAttribute("user", st);
             request.setAttribute("userlist", stList);
             RequestDispatcher rd = request.getRequestDispatcher("pages/userlist.jsp");
+            rd.forward(request,response);
+        }
+        if(page.equalsIgnoreCase("logout")){
+            HttpSession sess = request.getSession(false);
+            sess.invalidate();
+            
+            RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
             rd.forward(request,response);
         }
     }

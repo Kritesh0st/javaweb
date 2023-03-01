@@ -27,6 +27,7 @@
     </head>
     <body>
         <div class="mainbody bor flex aic jcc fdc">
+            <%@include file="../include/navbar.jsp" %>
         <h1>Edit User</h1>
         <c:forEach items="${id}" var="id">
         <form class="formbody borx flex fdc" action="user?page=updateuser&id=${id}" method="post">
